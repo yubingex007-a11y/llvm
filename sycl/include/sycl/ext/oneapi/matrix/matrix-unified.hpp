@@ -24,8 +24,8 @@
 #include <sycl/exception.hpp>                 // for runtime_error
 #include <sycl/ext/oneapi/matrix/matrix-unified-utils.hpp> // for layout, use, tf32, convertMatrixUseEnumToString
 #include <sycl/ext/oneapi/matrix/query-types.hpp> // for convertTypeToMatrixTypeString
-#include <sycl/marray.hpp>                                 // for marray
-#include <sycl/multi_ptr.hpp>                              // for multi_ptr
+#include <sycl/marray.hpp>                        // for marray
+#include <sycl/multi_ptr.hpp>                     // for multi_ptr
 
 #include <cstring>     // for size_t, memcpy
 #include <stdint.h>    // for uint32_t
@@ -146,7 +146,7 @@ template <
     std::enable_if_t<std::is_same<S, std::remove_const_t<T>>::value, bool> =
         true>
 inline __SYCL_ALWAYS_INLINE void joint_matrix_load(
-    Group &sg,
+    Group sg,
     joint_matrix<Group, S, use::accumulator, NumRows, NumCols,
                  sycl::ext::oneapi::experimental::matrix::layout::dynamic> &res,
     multi_ptr<T, Space, IsDecorated> src, size_t stride,
@@ -214,7 +214,7 @@ template <
                           std::is_same<std::remove_const_t<T>, float>::value),
                      bool> = true>
 inline __SYCL_ALWAYS_INLINE void
-joint_matrix_load(Group &sg,
+joint_matrix_load(Group sg,
                   joint_matrix<Group, S, Use, NumRows, NumCols, Layout> &res,
                   multi_ptr<T, Space, IsDecorated> src, size_t stride) {
 #if defined(__SYCL_DEVICE_ONLY__)
@@ -253,7 +253,7 @@ joint_matrix_load(Group &sg,
 template <typename Group, typename T, size_t NumRows, size_t NumCols,
           access::address_space Space, access::decorated IsDecorated>
 inline __SYCL_ALWAYS_INLINE void joint_matrix_store(
-    Group &sg,
+    Group sg,
     const joint_matrix<Group, T, use::accumulator, NumRows, NumCols,
                        sycl::ext::oneapi::experimental::matrix::layout::dynamic>
         &src,
@@ -329,8 +329,7 @@ template <typename Group, typename Ta, typename Tb, typename Tc, typename Td,
     sycl::detail::convertTypeToMatrixTypeString<Tc>(),
     sycl::detail::convertTypeToMatrixTypeString<Td>(), M, K, N)]]
 #endif // defined(__SYCL_DEVICE_ONLY__)
-inline __SYCL_ALWAYS_INLINE void
-joint_matrix_mad(
+inline __SYCL_ALWAYS_INLINE void joint_matrix_mad(
     Group,
     joint_matrix<Group, Td, use::accumulator, M, N,
                  sycl::ext::oneapi::experimental::matrix::layout::dynamic> &D,
